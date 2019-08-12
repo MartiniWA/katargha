@@ -3,7 +3,7 @@ Katargha is an sub-module bundler for the CRA based projects, works without ejec
 
 # Basic configuration and usage
 
-src/.katargha.json
+.katargha.json
 ```json
 {
   "dir": "./sw-modules",

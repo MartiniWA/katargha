@@ -11,7 +11,7 @@
     "ramda": "^0.26.1"
   },
   "bin": {
-    "katargha": "./index.js"
+    "katargha": "./bin/katargha.js"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
