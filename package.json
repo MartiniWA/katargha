@@ -1,0 +1,21 @@
+{
+  "name": "katargha",
+  "version": "1.0.0",
+  "description": "Katargha is an sub-module bundler for the CRA based projects, works without ejecting from CRA",
+  "main": "index.js",
+  "repository": "https://github.com/MartiniWA/katargha.git",
+  "author": "dkvilo <dkviloria@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "ramda": "^0.26.1"
+  },
+  "bin": {
+    "katargha": "./index.js"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}

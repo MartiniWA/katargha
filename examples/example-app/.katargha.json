@@ -1,0 +1,7 @@
+{
+  "dir": "./sw-modules",
+  "override": "./build/service-worker.js",
+  "ignore": [
+    "i-don't-need-this-service.js"
+  ]
+}
