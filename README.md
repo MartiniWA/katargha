@@ -18,7 +18,11 @@ npm install katargha --save-dev
 .katargha.json
 ```json
 {
-  "dir": "./sw-modules",
+  "dir": {
+    "src": "./sw-modules",
+    "dist": "./build"
+  },
+  "importScript": true,
   "override": "./build/service-worker.js",
   "ignore": [
     "i-don't-need-this-service.js",
