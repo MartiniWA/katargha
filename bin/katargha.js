@@ -42,9 +42,25 @@ function overrideAction(file, files) {
   }
 }
 
-function generateBundle(override, files, action) {
+function outputAction(files) {
+  try {
+    let data = '';
+    files.forEach((f) => {
+      data += fs.readFileSync(resolve(config.dir, f), 'utf-8');
+    });
+    fs.writeFileSync(resolve(config.output), data);
+    console.log(`Bundle:\n\t${config.output} |> ${getFileSizeInBytes(resolve(config.output))} Bytes\n`);
+  } catch (err) {
+    console.log('[katargha]:', err.message);
+  }
+}
+
+function generateBundle(file, files, action) {
   if (action === 'override') {
-    overrideAction(override, files);
+    overrideAction(file, files);
+  }
+  if (action === 'output') {
+    outputAction(files);
   }
 }
 
