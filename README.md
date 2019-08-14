@@ -1,6 +1,18 @@
 # KATARGHA
 Katargha is an sub-module bundler for the CRA based projects, works without ejecting from CRA
 
+
+# Yarn & NPM
+
+```
+yarn add katargha -D
+```
+
+```
+npm install katargha --save-dev
+```
+
+
 # Basic configuration and usage
 
 .katargha.json
