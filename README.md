@@ -43,6 +43,6 @@ root/
 
 ### TODO for .katargha.json
  - [x] Override support
- - [ ] Output support
+ - [x] Output support
  - [ ] API for node-side internal configuration
 
