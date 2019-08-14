@@ -7,9 +7,15 @@ const { difference } = require('ramda');
 const { Template } = require('../lib/info');
 
 const DEFAULT_CONFIG_PATH = './.katargha.json';
+const DEFAULT_SRC_DIR_PATH = './sw-modules';
+const DEFAULT_DIST_DIR_PATH = './build';
 
 let config = {
-  dir: null,
+  importScript: false,
+  dir: {
+    src: DEFAULT_SRC_DIR_PATH,
+    dist: DEFAULT_DIST_DIR_PATH,
+  },
   output: null,
   override: null,
   ignore: [],
@@ -25,31 +31,71 @@ function getFileSizeInBytes(filename) {
 }
 
 function overrideAction(file, files) {
+  let data = '';
+  const originalFile = resolve(config.dir.dist, file);
+
   try {
-    let data = '';
-
-    fs.accessSync(resolve(file), fs.F_OK);
-    data = fs.readFileSync(resolve(file), 'utf-8');
-
+    if (config.importScript) {
+      /*
+      * Copy all src to dist (except ignored files)
+      */
+      files.forEach((f) => {
+        fs.copyFileSync(resolve(config.dir.src, f), `${resolve(config.dir.dist, f)}`);
+      });
+    }
+    /*
+    * Check for destination file
+    */
+    fs.accessSync(originalFile, fs.F_OK);
+    /*
+    * Read data from from original service-worker file
+    */
+    data = fs.readFileSync(originalFile, 'utf-8');
+    /*
+    * Read Data from custom sw modules (except ignored files) and append/import (based on config)
+    */
     files.forEach((f) => {
-      data += fs.readFileSync(resolve(config.dir, f), 'utf-8');
+      if (config.importScript) {
+        data += `importScripts('/${f}');`;
+      } else {
+        data += fs.readFileSync(resolve(config.dir.src, f), 'utf-8');
+      }
     });
-
-    fs.writeFileSync(resolve(config.override), data);
-    console.log(`Bundle:\n\t${config.override} |> ${getFileSizeInBytes(resolve(config.override))} Bytes\n`);
+    /*
+    * Override original data
+    */
+    fs.writeFileSync(resolve(config.dir.dist, config.override), data);
+    console.log(`Bundle:\n\t${config.override} |> ${getFileSizeInBytes(originalFile)} Bytes\n`);
   } catch (err) {
     console.log('[katargha]:', err.message);
   }
 }
 
 function outputAction(files) {
+  let data = '';
+
   try {
-    let data = '';
+    if (config.importScript) {
+      /*
+      * Copy all src to dist (except ignored files)
+      */
+      files.forEach((f) => {
+        fs.copyFileSync(resolve(config.dir.src, f), `${resolve(config.dir.dist, f)}`);
+      });
+    }
+    /*
+    * Read Data from custom sw modules (except ignored files) and append/import (based on config)
+    */
     files.forEach((f) => {
-      data += fs.readFileSync(resolve(config.dir, f), 'utf-8');
+      if (config.importScript) {
+        data += `importScripts('/${f}');`;
+      } else {
+        data += fs.readFileSync(resolve(config.dir.src, f), 'utf-8');
+      }
     });
-    fs.writeFileSync(resolve(config.output), data);
-    console.log(`Bundle:\n\t${config.output} |> ${getFileSizeInBytes(resolve(config.output))} Bytes\n`);
+
+    fs.writeFileSync(resolve(config.dir.dist, config.output), data);
+    console.log(`Bundle:\n\t${config.output} |> ${getFileSizeInBytes(resolve(config.dir.dist, config.output))} Bytes\n`);
   } catch (err) {
     console.log('[katargha]:', err.message);
   }
@@ -95,7 +141,11 @@ function loadConfig(path) {
 }
 
 function parseArgs(cliArgs) {
-  const { dir, override, output } = loadConfig(DEFAULT_CONFIG_PATH);
+  const {
+    dir,
+    override,
+    output,
+  } = loadConfig(DEFAULT_CONFIG_PATH);
 
   if (!dir) {
     console.log('[katargha]: invalid config! `dir` is required');
@@ -108,11 +158,11 @@ function parseArgs(cliArgs) {
   }
 
   if (override) {
-    generateBundle(override, listModules(dir, (cliArgs[0] === '-l')), 'override');
+    generateBundle(override, listModules(dir.src, (cliArgs[0] === '-l')), 'override');
   }
 
   if (output) {
-    generateBundle(output, listModules(dir, (cliArgs[0] === '-l')), 'output');
+    generateBundle(output, listModules(dir.src, (cliArgs[0] === '-l')), 'output');
   }
 }
 

@@ -1,6 +1,10 @@
 {
-  "dir": "./sw-modules",
-  "output": "./build/service-worker-custom.js",
+  "dir": {
+    "src": "./sw-modules",
+    "dist": "./build"
+  },
+  "override": "service-worker.js",
+  "importScript": true,
   "ignore": [
     "i-don't-need-this-service.js"
   ]
