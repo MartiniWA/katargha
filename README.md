@@ -46,3 +46,7 @@ root/
  - [x] Output support
  - [ ] API for node-side internal configuration
 
+
+
+# Package name
+Katargha is a Georgian word კატარღა [k’at’argha] and means a small boat with an engine.
