@@ -1,6 +1,6 @@
 {
   "dir": "./sw-modules",
-  "override": "./build/service-worker.js",
+  "output": "./build/service-worker-custom.js",
   "ignore": [
     "i-don't-need-this-service.js"
   ]

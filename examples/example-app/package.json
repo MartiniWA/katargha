@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && ../katargha/lib/katargha.js -l",
+    "build": "react-scripts build && ../../bin/katargha.js -l",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
