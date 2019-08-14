@@ -6,9 +6,13 @@ const { difference } = require('ramda');
 
 const { Template } = require('../lib/info');
 
-const DEFAULT_CONFIG_PATH = './.katargha.json';
-const DEFAULT_SRC_DIR_PATH = './sw-modules';
-const DEFAULT_DIST_DIR_PATH = './build';
+const {
+  DEFAULT_CONFIG_PATH,
+  DEFAULT_SRC_DIR_PATH,
+  DEFAULT_DIST_DIR_PATH,
+} = require('../lib/globals');
+
+const { getFileSizeInBytes } = require('../lib/utils');
 
 let config = {
   importScript: false,
@@ -22,13 +26,6 @@ let config = {
 };
 
 const [,, ...args] = process.argv;
-
-// Source: https://techoverflow.net/2012/09/16/how-to-get-filesize-in-node-js/
-function getFileSizeInBytes(filename) {
-  const stats = fs.statSync(filename);
-  const fileSizeInBytes = stats.size;
-  return fileSizeInBytes;
-}
 
 function overrideAction(file, files) {
   let data = '';
@@ -56,7 +53,7 @@ function overrideAction(file, files) {
     */
     files.forEach((f) => {
       if (config.importScript) {
-        data += `importScripts('/${f}');`;
+        data += `\nimportScripts('/${f}');\n`;
       } else {
         data += fs.readFileSync(resolve(config.dir.src, f), 'utf-8');
       }
@@ -88,12 +85,11 @@ function outputAction(files) {
     */
     files.forEach((f) => {
       if (config.importScript) {
-        data += `importScripts('/${f}');`;
+        data += `\nimportScripts('/${f}\n');`;
       } else {
         data += fs.readFileSync(resolve(config.dir.src, f), 'utf-8');
       }
     });
-
     fs.writeFileSync(resolve(config.dir.dist, config.output), data);
     console.log(`Bundle:\n\t${config.output} |> ${getFileSizeInBytes(resolve(config.dir.dist, config.output))} Bytes\n`);
   } catch (err) {
