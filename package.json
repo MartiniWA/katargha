@@ -13,6 +13,15 @@
   "bin": {
     "katargha": "./bin/katargha.js"
   },
+  "keywords": [
+    "katargha",
+    "bundler",
+    "sw",
+    "service worker",
+    "workbox",
+    "cra",
+    "create react app"
+  ],
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
